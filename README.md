@@ -47,3 +47,11 @@ After applying the changes , close the dialog by selecting ok. Proceed to config
 With the VM's configured, the fun part begins!! :) 
 
 
+#### 2) Information Gathering and Vulnerability Scanning
+
+Having both VM's running I proceed to do a basic scan of the subnet network in order to identify live hosts.  This results in 1 host being detected with a number of active ports discovered 
+
+![Capture JPG7](https://github.com/user-attachments/assets/78929a3c-7ce6-48b6-b04e-f52a5e85f50e)
+
+
+
