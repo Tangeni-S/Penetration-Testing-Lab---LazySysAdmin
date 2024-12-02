@@ -14,14 +14,20 @@ This lab will require me to have the following in order to attempt:
   1) Vmware Workstation (This is my preferred Hypervisor of choice, you can as well utilize VirtualBox)
   2) Kali Linux (I utilize the preconfigured Kali images found at [osboxes.org](https://www.osboxes.org/vmware-images/) to save time on having to do a complete install)
   3) LazySysAdmin VM found at vulnhub.com at the following link >>> https://www.vulnhub.com/entry/lazysysadmin-1,205/
+(**Disclaimer: This VM was created by the user, Togie Mcdogie and I have no claim/credit to any part of its development**)
 
 
 
 ### Tools Used
--Nmap
+- Nmap 
+- Wappalyzer
+- 
 
-### Skills Learned
 
+### Skills Learned / Developed
+1) Passive reconnaissance of a network subnet & devices
+2) Directory enumeration of a hosted website
+3) 
 
 ### Procedure
 #### 1) Setting up the VM's
