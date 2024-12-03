@@ -83,8 +83,16 @@ SCAN : nmap -sV 15.10.1.128 --script vuln
 ![Capture JPG10](https://github.com/user-attachments/assets/83bf9386-a956-42ee-91c1-489a8af318e2)
 ![Capture JPG11](https://github.com/user-attachments/assets/872834b4-d244-458e-8793-8b244624c7f2)
 
+The returned result look promising to attempt to exploit the web application running on port 80. 
+
+The confirmed attack be being a SlowLoris attack which is a type of DOS attack meant to compromise the availability of the servers services.
 
 
+
+
+![Capture JPG12](https://github.com/user-attachments/assets/e29cad80-72aa-4d00-a0a2-df2748430aa0)
+
+![Capture JPG13](https://github.com/user-attachments/assets/015b93c0-9985-4ccb-b02c-92bf1bcba0fb)
 
 
 
