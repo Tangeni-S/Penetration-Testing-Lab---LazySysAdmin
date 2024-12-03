@@ -72,9 +72,10 @@ The above information helps me deduce that there is an Apache Web Server (Port 8
 From the above information of knowing there is a website running on http port 80 , i can go to a browser and try to see what it brings up. I open a browser and enter
 http://15.10.1.128:80 
 
+https://github.com/user-attachments/assets/982146c7-e722-49f9-9d15-c1d79396bf9f 
 
 
-Before proceeding to delve into digging deeper into the above , i run another scan that uses a script to identify vulnerabilities that could be used to exploit the detected services
+Didnt really find much to interact with  on that webpage so i opt to run another scan that uses a script to identify vulnerabilities on all the detected services that could be used to exploit
 
 SCAN : nmap -sV 15.10.1.128 --script vuln
 
