@@ -83,9 +83,7 @@ SCAN : nmap -sV 15.10.1.128 --script vuln
 ![Capture JPG11](https://github.com/user-attachments/assets/872834b4-d244-458e-8793-8b244624c7f2)
 
 
-### VIDEO OF VMWARE
 
-https://github.com/user-attachments/assets/e3a84744-7cab-4286-ab61-284759cddcee
 
 
 
