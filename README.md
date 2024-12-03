@@ -68,6 +68,11 @@ SCAN: nmap -sV -O 15.10.1.128
 The above information helps me deduce that there is an Apache Web Server (Port 80) running on this machine and as well an mysql server(Port 3306). I note these as major points of interest.
 - HTTP Web Server on Port 80
 - mysql Server port 3306
+  
+From the above information of knowing there is a website running on http port 80 , i can go to a browser and try to see what it brings up. I open a browser and enter
+http://15.10.1.128:80 
+
+
 
 Before proceeding to delve into digging deeper into the above , i run another scan that uses a script to identify vulnerabilities that could be used to exploit the detected services
 
@@ -76,5 +81,14 @@ SCAN : nmap -sV 15.10.1.128 --script vuln
 ![Capture JPG9](https://github.com/user-attachments/assets/ff1b98bf-f71f-494f-b1e1-b894dcf7fac1)
 ![Capture JPG10](https://github.com/user-attachments/assets/83bf9386-a956-42ee-91c1-489a8af318e2)
 ![Capture JPG11](https://github.com/user-attachments/assets/872834b4-d244-458e-8793-8b244624c7f2)
+
+
+### VIDEO OF VMWARE
+
+https://github.com/user-attachments/assets/e3a84744-7cab-4286-ab61-284759cddcee
+
+
+
+
 
 
