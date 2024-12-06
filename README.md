@@ -205,6 +205,23 @@ I proceed to view what commands Togie can run using sudo by running the followin
 
 ![26](https://github.com/user-attachments/assets/a25f73e5-560d-4cc3-8085-a5aa94f7d76b)
 
+It shows that togie can run any command with sudo. With that knowledge we can attempt to switch to the root use by running the command:
+
+Command: ** sudo su **
+
+![root_achieved](https://github.com/user-attachments/assets/4998d505-9dec-4751-aae1-ad518229f8f7)
+
+Command ran successfully and we have acquired root access to the server. We should  now be able to proceed to the root directory and view its contents:
+
+![27](https://github.com/user-attachments/assets/f1781507-88ae-4192-8f06-5429c0e20b27)
+
+
+## CONTENTS OF FLAG
+
+![flag](https://github.com/user-attachments/assets/9f9d835b-ecee-4612-8273-7aeec38e1b80)
+
+
+
 
 
 
