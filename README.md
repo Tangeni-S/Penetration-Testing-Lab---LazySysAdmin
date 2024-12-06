@@ -1,33 +1,31 @@
 # Penetration-Testing-Lab---LazySysAdmin
 
 ## Objective
-This lab is aimed to test my penetration testing abilities in a controlled enviroment. The primary focus is to simulate to as close as possible a live penetration test according to the CompTIA Pentest+ methodology
-which entails the following steps:
-- Step 1: Planning and Scoping
-- Step 2: Information Gathering and Vulnerability Scanning
-- Step 3: Attacks and Exploits
-- Step 4: Reporting and Communication
+The object of this lab is to gain root access to the system and present the flag stored on the system.
 
 
 ### Requirements
-This lab will require me to have the following in order to attempt:
+This lab required the following in order to attempt:
   1) Vmware Workstation (This is my preferred Hypervisor of choice, you can as well utilize VirtualBox)
   2) Kali Linux (I utilize the preconfigured Kali images found at [osboxes.org](https://www.osboxes.org/vmware-images/) to save time on having to do a complete install)
   3) LazySysAdmin VM found at vulnhub.com at the following link >>> https://www.vulnhub.com/entry/lazysysadmin-1,205/
-(**Disclaimer: This VM was created by the user, Togie Mcdogie and I have no claim/credit to any part of its development**)
+  (**Disclaimer: This Virtual Machine was created by the user, Togie Mcdogie and I have no claim/credit to any part of its development**)
 
 
 
 ### Tools Used
 - Nmap 
-- Wappalyzer
-- 
+- SMBclient
+- Netcat
+- ssh
 
 
 ### Skills Learned / Developed
 1) Passive reconnaissance of a network subnet & devices
 2) Directory enumeration of a hosted website
-3) 
+3) SMB share enumaration
+4) Privilege escalation
+5) Php
 
 ### Procedure
 #### 1) Setting up the VM's
@@ -36,9 +34,9 @@ I configure the RAM to my desired amounts as to not drastically affect my host's
 
 ![Capture](https://github.com/user-attachments/assets/0ef5cc73-3633-40d8-a2da-9368a1fd3c68)  ![Capture JPG2](https://github.com/user-attachments/assets/9cc1ac30-35d9-4aa8-80aa-d9c1d82c763b)
 
-After that I proceed to configure the network settings which is crucial. In my case I want my VM's to be configured to Host Only but with my own specified IP network. I do so by opening the Virtual Network Editor in VMware
+I proceed to configure the network settings which is crucial. In my case I want my VM's to be configured to Host Only but with my own specified IP network. I do so by opening the Virtual Network Editor in VMware
 
-![Capture JPG3](https://github.com/user-attachments/assets/b07c9e81-0be5-4928-8584-ec7bc815957b) Selecting the Change Settings button allows me to adjust the configurations
+![Capture JPG3](https://github.com/user-attachments/assets/b07c9e81-0be5-4928-8584-ec7bc815957b) Selecting the Change Settings button  to adjust the configurations
 
 
 Select Add Network and specify  the Virtual Network interface to utilize. In my case i select vmnet5. Set it to host-only and proceed to assign the network address of your choice accordingly. I utilize 15.10.1.0 /24 network.
@@ -55,7 +53,7 @@ With the VM's configured, the fun part begins!! :)
 
 #### 2) Information Gathering and Vulnerability Scanning
 
-Having both VM's running I proceed to do a basic scan of the subnet network in order to identify live hosts.  This results in 1 host being detected with a number of active ports discovered 
+Having both VM's running I proceed to do a basic scan of the  network in order to identify live hosts.  This results in 1 host being detected with a number of active ports discovered 
 
 SCAN: nmap 15.10.1.128
 ![Capture JPG7](https://github.com/user-attachments/assets/78929a3c-7ce6-48b6-b04e-f52a5e85f50e)
@@ -65,24 +63,26 @@ Proceed to gather further details of the host ports. I run a nmap scan for Servi
 SCAN: nmap -sV -O 15.10.1.128 
 ![Capture JPG8](https://github.com/user-attachments/assets/fe6d404e-ed60-463e-ac75-961fbbed2cb2)
 
-The above information helps me deduce that there is an Apache Web Server (Port 80) running on this machine and as well an mysql server(Port 3306). I note these as major points of interest.
+The information tells me there is Samba ,an Apache Web Server (Port 80) and as well an mysql server(Port 3306). I note these as major points of interest.
 - SMB ports 139 and 445
 - HTTP Web Server on Port 80
 - mysql Server port 3306
   
-Ideally i wanted to look more into the ports running Samba. Samba is an open source software that allows the sharing of file and print services through the ports discovered. 
+Ideally I wanted to look more into the ports running Samba. Samba is an open source software that allows the sharing of file and print services through the ports discovered and has need known to be a common
+point of exploit due to misconfigurations. 
 
 ![1](https://github.com/user-attachments/assets/4a899a4e-adda-4656-a763-f5fe9b5f1589)
 **nmap 15.10.1.128 --script smb-enum-shares**
 
-I run another nmap scan with a script to enumerate the smb shares on the server and it returns promising results. From the above, the most promising share would be the share$
+I run another nmap scan with a script to enumerate the smb shares on the server and it returns promising results. From the above, the most promising share would be the **share$**
 because the path for the share gives an indication of the directory for a website being hosted which we could confirm due to the previous nmap scan showing an Apache web server
 running on **port 80**.
 
 ![2](https://github.com/user-attachments/assets/8eacfaa6-576a-4c90-b8da-ae1d502e67b6)
+
 **smbclient '\\15.10.1.128\share$'**
 I proceed to connect to the share and list the directory contents. The content confirms that this is the directory for a website.
-Analyzing the content in this location, I find a password in the deets.txt file
+Analyzing the content in this location, I find a password in the **deets.txt** file
 - Password: **12345**
 ![deets file](https://github.com/user-attachments/assets/0969e346-07e5-4a37-a059-dcb1e1fb1971)
 
@@ -96,7 +96,7 @@ Running a scan with nikto I confirm that the directories are for this website wi
 ![3](https://github.com/user-attachments/assets/f027ae18-94cd-4841-99fd-0b765945f350)
 
 This shows that the website uses wordpress and there is a wordpress login page that we can look to access in order to gain management access. 
-Whilst trying common login credentials on the page , i managed to confirm that there is an account by the name of admin existing as shown below..
+Whilst trying common login credentials on the page , i managed to confirm that there is an account by the name of **admin** existing as shown below..
 
 ![4](https://github.com/user-attachments/assets/b3eed7b8-6630-49f4-bf0b-90afbaca54ad)
 
@@ -123,24 +123,25 @@ I do so by hovering over appearance and selecting themes.
 
 ![9](https://github.com/user-attachments/assets/2b30ad1a-a796-40c6-8fa7-1339c0177a1c)
 
-The Themes window loads, it shows the current theme that is active as is underlined, in this case **twenty seventeen**. To make changes to this theme we select Editor as indicated
+The themes window loads, it shows the current theme that is active as is underlined, in this case **twenty seventeen**. To make changes to this theme we select **Editor** as indicated
 
 ![10](https://github.com/user-attachments/assets/f044b216-45bf-4873-a4c9-e1dcb628be8e)
 
-With the editor open , I will select the **404 Template** to edit for this them. I replaced the content indicated by the brace with  the content of the **php-reverse-shell**   script
+With the editor open , I will select the **404 Template** to edit for this theme. I replaced the content indicated by the brace with  the content of the **php-reverse-shell**   script
 found at **/usr/share/webshells/php/php-reverse-shell.php** 
 
 ![12](https://github.com/user-attachments/assets/74f69943-0afa-4eba-b816-198e5cb3b0c3) 
 
-Having replaced the default content with the reverse shell script i scroll down to change the listening IP address to my kali machine IP address 
+Having replaced the default content with the reverse shell script i scroll down to change the listening IP address to my kali machine IP address( NB: PORT CAN REMAIN THE SAME)
 
 ![13](https://github.com/user-attachments/assets/ab6de75f-cfb3-45c2-b8f4-28fcea93492f)
 
-Having changed my IP , press the Update File button and ensure it has been update successfully.
+Having changed my IP , press the Update File button and ensure it has been updated successfully.
 
 ![14](https://github.com/user-attachments/assets/6fb5f092-77eb-4f9b-b996-ca2f4831ca8d) 
 
-With that set, i proceed to go to my kali and start a listener with Netcat listening on the specified port , **1234**.
+With that set, i proceed to go to my Kali machine and start a listener with Netcat listening on the specified port , **1234**.
+Command: **nc -lvnp 1234**
 
 ![15](https://github.com/user-attachments/assets/c4c6f816-32d8-4236-98ce-9fc94ee134d2)
 
@@ -220,7 +221,7 @@ Command ran successfully and we have acquired root access to the server. We shou
 
 ![flag](https://github.com/user-attachments/assets/9f9d835b-ecee-4612-8273-7aeec38e1b80)
 
-
+# THE END
 
 
 
