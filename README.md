@@ -81,9 +81,12 @@ running on **port 80**.
 
 ![2](https://github.com/user-attachments/assets/8eacfaa6-576a-4c90-b8da-ae1d502e67b6)
 **smbclient '\\15.10.1.128\share$'**
+I proceed to connect to the share and list the directory contents. The content confirms that this is the directory for a website.
+Analyzing the content in this location, I find a password in the deets.txt file
+- Password: **12345**
+![deets file](https://github.com/user-attachments/assets/0969e346-07e5-4a37-a059-dcb1e1fb1971)
 
-I proceed to connect to the share and list the directory contents. The content confirms that this is the directory for a website. 
-
+**Webpage Browsing**
 https://github.com/user-attachments/assets/5f0dd0b7-bbfa-411f-8b0b-d1558a041db9
 
 Browsing the site, not much interactive content found.  
@@ -120,9 +123,92 @@ I do so by hovering over appearance and selecting themes.
 
 ![9](https://github.com/user-attachments/assets/2b30ad1a-a796-40c6-8fa7-1339c0177a1c)
 
-The Themes window loads, it shows the current theme that is active as is underlined. To make changes to this theme we select Editor as indicated
+The Themes window loads, it shows the current theme that is active as is underlined, in this case **twenty seventeen**. To make changes to this theme we select Editor as indicated
 
 ![10](https://github.com/user-attachments/assets/f044b216-45bf-4873-a4c9-e1dcb628be8e)
+
+With the editor open , I will select the **404 Template** to edit for this them. I replaced the content indicated by the brace with  the content of the **php-reverse-shell**   script
+found at **/usr/share/webshells/php/php-reverse-shell.php** 
+
+![12](https://github.com/user-attachments/assets/74f69943-0afa-4eba-b816-198e5cb3b0c3) 
+
+Having replaced the default content with the reverse shell script i scroll down to change the listening IP address to my kali machine IP address 
+
+![13](https://github.com/user-attachments/assets/ab6de75f-cfb3-45c2-b8f4-28fcea93492f)
+
+Having changed my IP , press the Update File button and ensure it has been update successfully.
+
+![14](https://github.com/user-attachments/assets/6fb5f092-77eb-4f9b-b996-ca2f4831ca8d) 
+
+With that set, i proceed to go to my kali and start a listener with Netcat listening on the specified port , **1234**.
+
+![15](https://github.com/user-attachments/assets/c4c6f816-32d8-4236-98ce-9fc94ee134d2)
+
+I proceed to visit the 404 template page in order to trigger the reverse shell connection. The page being at 
+**http://15.10.1.128/wordpress/wp-content/themes/twentyseventeen/404.php**. It is shown in the SMB share location below:
+
+![16](https://github.com/user-attachments/assets/46481ed3-2835-45d5-aaa6-d964eddfdfa5)
+
+Entering the following URL in my browser: 
+
+![17](https://github.com/user-attachments/assets/31e502a3-825d-4c18-a67c-6c2863932aee)
+
+Presented me with the reverse shell from the listener started previously on port 1234:
+
+![18](https://github.com/user-attachments/assets/a22f3839-90f9-4f77-8ec4-ddb95cef528b)
+
+I proceed to spawn an interactive shell using python with the following command:
+**python -c "import pty;pty.spawn('/bin/bash')"**
+
+![19](https://github.com/user-attachments/assets/1b81aeb2-636e-44d4-b773-8574ea46bc7b)
+
+Take not in a error in format will result in the python shell not spawning as indicated by the X. 
+
+With the python shell spawned ,  list the directory i am currently in and cd into home to view name of the user I am currently logged in as. 
+The user being: **togie**
+
+![20](https://github.com/user-attachments/assets/1cf9396b-2d81-41a2-926b-5c70aa890ee2)
+
+
+I **cd** into togie and **ls -al** to view all contents to see if i find the flag here, but it is not. 
+I assume since it is not here i can assume it is in the **root** directory
+
+
+![21](https://github.com/user-attachments/assets/100c9c4d-5e2e-4364-a5c6-bdf34963ac81)
+
+Trying to access the root directory results in Access denied. This means tobie lacks the required permissions to access root directory.
+
+**Going back to the Password found in the deets.txt file**
+I attempt to use that password to login to the user account , togie, over ssh since we know from the service there is ssh running and we have a user account name but a unknown password.. 
+I open a new terminal window and do so accordingly:
+
+![23](https://github.com/user-attachments/assets/43fd3c29-707c-4268-aa3d-838cbda26d22)
+
+Login Successful, the password 12345 found earlier was for togie.
+
+## Alternatively 
+Whilst in the window where i spawned the python  shell , i can use switch user command to switch to the togie user account
+
+Comamand: **su togie** >> Password: **12345**
+![24](https://github.com/user-attachments/assets/1dbe86a2-3dcb-4ac6-a270-f0ef1c4f451d)
+
+
+
+## Privilege Escalation
+
+Logged in as Togie, he still cannot access root directory
+![25](https://github.com/user-attachments/assets/935b0219-a631-432b-8a84-303ea5bc38f6) 
+
+
+I proceed to view what commands Togie can run using sudo by running the following command: 
+**sudo -l**
+
+![26](https://github.com/user-attachments/assets/a25f73e5-560d-4cc3-8085-a5aa94f7d76b)
+
+
+
+
+
 
 
 
