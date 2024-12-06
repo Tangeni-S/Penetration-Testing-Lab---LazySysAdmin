@@ -66,33 +66,66 @@ SCAN: nmap -sV -O 15.10.1.128
 ![Capture JPG8](https://github.com/user-attachments/assets/fe6d404e-ed60-463e-ac75-961fbbed2cb2)
 
 The above information helps me deduce that there is an Apache Web Server (Port 80) running on this machine and as well an mysql server(Port 3306). I note these as major points of interest.
+- SMB ports 139 and 445
 - HTTP Web Server on Port 80
 - mysql Server port 3306
   
-From the above information of knowing there is a website running on http port 80 , i can go to a browser and try to see what it brings up. I open a browser and enter
-http://15.10.1.128:80 
+Ideally i wanted to look more into the ports running Samba. Samba is an open source software that allows the sharing of file and print services through the ports discovered. 
 
-https://github.com/user-attachments/assets/982146c7-e722-49f9-9d15-c1d79396bf9f 
+![1](https://github.com/user-attachments/assets/4a899a4e-adda-4656-a763-f5fe9b5f1589)
+**nmap 15.10.1.128 --script smb-enum-shares**
+
+I run another nmap scan with a script to enumerate the smb shares on the server and it returns promising results. From the above, the most promising share would be the share$
+because the path for the share gives an indication of the directory for a website being hosted which we could confirm due to the previous nmap scan showing an Apache web server
+running on **port 80**.
+
+![2](https://github.com/user-attachments/assets/8eacfaa6-576a-4c90-b8da-ae1d502e67b6)
+**smbclient '\\15.10.1.128\share$'**
+
+I proceed to connect to the share and list the directory contents. The content confirms that this is the directory for a website. 
+
+https://github.com/user-attachments/assets/5f0dd0b7-bbfa-411f-8b0b-d1558a041db9
+
+Browsing the site, not much interactive content found.  
+
+Running a scan with nikto I confirm that the directories are for this website with additional other information 
+
+![3](https://github.com/user-attachments/assets/f027ae18-94cd-4841-99fd-0b765945f350)
+
+This shows that the website uses wordpress and there is a wordpress login page that we can look to access in order to gain management access. 
+Whilst trying common login credentials on the page , i managed to confirm that there is an account by the name of admin existing as shown below..
+
+![4](https://github.com/user-attachments/assets/b3eed7b8-6630-49f4-bf0b-90afbaca54ad)
+
+The error message confirms for me that **admin** username exists though i got the wrong password.
+
+I proceed to analyze the SMB share further by navigating into the wordpress directory
+
+![6](https://github.com/user-attachments/assets/3598a4d8-bb2a-45e9-b32c-2c2f7962e50d)
+
+Having analysed the files in the directory , the **wp-config.php** i identify contains the credentials for the wordpress login page  as shown below
+
+![7](https://github.com/user-attachments/assets/974f2309-2040-49bf-8bbc-1bec08051998)
+
+Username: Admin
+
+Password: TogieMYSQL12345^^
+
+Using these credentials, the login was successfull on the Wordpress login page bringing me to the Admin page.
+
+![8](https://github.com/user-attachments/assets/76d2243b-7824-4d45-b135-e7551acc253b)
+
+From this point, I seek to find a means of gaining a shell to the server by changing the contents of a certain php file that is used by the website.
+I do so by hovering over appearance and selecting themes. 
+
+![9](https://github.com/user-attachments/assets/2b30ad1a-a796-40c6-8fa7-1339c0177a1c)
+
+The Themes window loads, it shows the current theme that is active as is underlined. To make changes to this theme we select Editor as indicated
+
+![10](https://github.com/user-attachments/assets/f044b216-45bf-4873-a4c9-e1dcb628be8e)
 
 
-Didnt really find much to interact with  on that webpage so i opt to run another scan that uses a script to identify vulnerabilities on all the detected services that could be used to exploit
 
-SCAN : nmap -sV 15.10.1.128 --script vuln
-
-![Capture JPG9](https://github.com/user-attachments/assets/ff1b98bf-f71f-494f-b1e1-b894dcf7fac1)
-![Capture JPG10](https://github.com/user-attachments/assets/83bf9386-a956-42ee-91c1-489a8af318e2)
-![Capture JPG11](https://github.com/user-attachments/assets/872834b4-d244-458e-8793-8b244624c7f2)
-
-The returned result look promising to attempt to exploit the web application running on port 80. 
-
-The confirmed attack be being a SlowLoris attack which is a type of DOS attack meant to compromise the availability of the servers services.
-
-
-
-
-![Capture JPG12](https://github.com/user-attachments/assets/e29cad80-72aa-4d00-a0a2-df2748430aa0)
-
-![Capture JPG13](https://github.com/user-attachments/assets/015b93c0-9985-4ccb-b02c-92bf1bcba0fb)
 
 
 
